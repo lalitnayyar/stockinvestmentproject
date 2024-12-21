@@ -1,0 +1,22 @@
+{
+  "name": "share-investment-ledger",
+  "version": "1.0.0",
+  "description": "A web application for managing share investments",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "dev:drop-tables": "node app.js --drop-tables"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "moment": "^2.29.4",
+    "sqlite3": "^5.1.6",
+    "yahoo-finance2": "^2.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

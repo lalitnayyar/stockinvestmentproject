@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Activity Web Application</title>
+</head>
+<body>
+    <h1>Task Activity Web Application</h1>
+    <form action="/tasks" method="POST">
+        <label for="name">Task Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+        <button type="submit">Add Task</button>
+    </form>
+    <h2>Task List</h2>
+    <ul>
+        <% if (tasks && tasks.length > 0) { %>
+            <% tasks.forEach(function(task) { %>
+                <li>
+                    <%= task.name %> - <%= task.description %> - <%= task.timestamp %>
+                </li>
+            <% }); %>
+        <% } else { %>
+            <li>No tasks available</li>
+        <% } %>
+    </ul>
+    <button onclick="window.print()">Print Tasks</button>
+</body>
+</html>

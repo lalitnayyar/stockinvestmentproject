@@ -29,8 +29,10 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
         console.log('Connected to database successfully');
         // Check for --drop-tables argument
         if (process.argv.includes('--drop-tables')) {
+            console.log('Dropping all tables... ***');
             dropAllTables(() => initializeDatabase());
         } else {
+            console.log('Initializing database... ***');
             initializeDatabase();
         }
     }

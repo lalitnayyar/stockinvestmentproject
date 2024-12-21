@@ -29,7 +29,12 @@ A web application for managing UAE stock investments with real-time portfolio tr
    npm start
    ```
 
-4. Access the application at `http://localhost:3000`
+4. (Optional) Reset the server:
+   ```bash
+   npm run start:reset
+   ```
+
+5. Access the application at `http://localhost:3000`
 
 ## Technology Stack
 

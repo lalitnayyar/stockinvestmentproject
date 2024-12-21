@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sell Transactions - Share Investment Ledger</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .transactions-summary {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .summary-item {
+            text-align: center;
+            padding: 10px;
+        }
+        .summary-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        .summary-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+
+    <div class="container mt-4">
+        <h2>Sell Transactions</h2>
+
+        <!-- Transactions Summary -->
+        <div class="transactions-summary">
+            <div class="row">
+                <div class="col-md-6 summary-item">
+                    <div class="summary-label">Total Shares Sold</div>
+                    <div class="summary-value"><%= totals.totalShares.toLocaleString() %></div>
+                </div>
+                <div class="col-md-6 summary-item">
+                    <div class="summary-label">Total Profit/Loss</div>
+                    <div class="summary-value <%= totals.totalProfit >= 0 ? 'text-success' : 'text-danger' %>">
+                        $<%= totals.totalProfit.toFixed(2) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Transaction History</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stock</th>
+                            <th>Shares Sold</th>
+                            <th>Purchase Price</th>
+                            <th>Sell Price</th>
+                            <th>Total Value</th>
+                            <th>Profit/Loss</th>
+                            <th>Return</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% transactions.forEach(function(transaction) { %>
+                            <tr>
+                                <td><%= moment(transaction.sell_date).format('YYYY-MM-DD') %></td>
+                                <td><%= transaction.symbol %> - <%= transaction.name %></td>
+                                <td><%= transaction.shares_sold %></td>
+                                <td>$<%= transaction.purchase_price.toFixed(2) %></td>
+                                <td>$<%= transaction.sell_price.toFixed(2) %></td>
+                                <td>$<%= (transaction.shares_sold * transaction.sell_price).toFixed(2) %></td>
+                                <td>
+                                    <span class="<%= transaction.profit_loss >= 0 ? 'text-success' : 'text-danger' %>">
+                                        $<%= transaction.profit_loss.toFixed(2) %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <% const returnPercent = ((transaction.sell_price - transaction.purchase_price) / transaction.purchase_price) * 100; %>
+                                    <span class="<%= returnPercent >= 0 ? 'text-success' : 'text-danger' %>">
+                                        <%= returnPercent >= 0 ? '+' : '' %><%= returnPercent.toFixed(2) %>%
+                                    </span>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</body>
+</html>

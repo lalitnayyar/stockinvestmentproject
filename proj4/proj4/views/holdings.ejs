@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Holdings - Share Investment Ledger</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('partials/nav') %>
+
+    <div class="container mt-4">
+        <h2>Holdings</h2>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Add New Holding</h5>
+                        <form action="/holdings" method="POST">
+                            <div class="mb-3">
+                                <label for="stock_id" class="form-label">Stock</label>
+                                <select class="form-control" id="stock_id" name="stock_id" required>
+                                    <% stocks.forEach(function(stock) { %>
+                                        <option value="<%= stock.id %>"><%= stock.symbol %> - <%= stock.name %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Number of Shares</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" 
+                                       min="1" step="1" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="purchase_price" class="form-label">Purchase Price Per Share</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="purchase_price" 
+                                           name="purchase_price" min="0.01" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="purchase_date" class="form-label">Purchase Date</label>
+                                <input type="date" class="form-control" id="purchase_date" 
+                                       name="purchase_date" value="<%= defaultDate %>" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Holding</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Current Holdings</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Stock</th>
+                            <th>Shares</th>
+                            <th>Purchase Price</th>
+                            <th>Current Price</th>
+                            <th>Total Cost</th>
+                            <th>Current Value</th>
+                            <th>Profit/Loss</th>
+                            <th>Purchase Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% holdings.forEach(function(holding) { %>
+                            <tr>
+                                <td><%= holding.symbol %> - <%= holding.name %></td>
+                                <td><%= holding.quantity %></td>
+                                <td>$<%= holding.purchase_price.toFixed(2) %></td>
+                                <td>$<%= holding.current_price ? holding.current_price.toFixed(2) : 'N/A' %></td>
+                                <td>$<%= (holding.quantity * holding.purchase_price).toFixed(2) %></td>
+                                <td>
+                                    <% if (holding.current_price) { %>
+                                        $<%= (holding.quantity * holding.current_price).toFixed(2) %>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <% if (holding.current_price) { %>
+                                        <% const profitLoss = holding.quantity * (holding.current_price - holding.purchase_price); %>
+                                        <% const profitLossPercent = ((holding.current_price - holding.purchase_price) / holding.purchase_price) * 100; %>
+                                        <span class="<%= profitLoss >= 0 ? 'text-success' : 'text-danger' %>">
+                                            $<%= profitLoss.toFixed(2) %>
+                                            (<%= profitLossPercent >= 0 ? '+' : '' %><%= profitLossPercent.toFixed(2) %>%)
+                                        </span>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td><%= moment(holding.purchase_date).format('YYYY-MM-DD') %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</body>
+</html>
